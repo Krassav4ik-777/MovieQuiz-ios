@@ -4,9 +4,23 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        newLabel.font = UIFont(name: "YSDisplay-Medium", size: 30)
+        questionLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        buttonNo.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        buttonYes.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        indexLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        questions.font = UIFont(name: "YSDisplay-Bold", size: 23)
+        
     }
-    @IBOutlet weak var newLabel: UILabel!
+    
+    @IBOutlet weak var questionLabel: UILabel!
+    
+    @IBOutlet weak var buttonNo: UIButton!
+    
+    @IBOutlet weak var buttonYes: UIButton!
+    
+    @IBOutlet weak var indexLabel: UILabel!
+    
+    @IBOutlet weak var questions: UILabel!
     
 }
 
