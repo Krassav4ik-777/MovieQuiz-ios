@@ -44,7 +44,7 @@
                                             <constraint firstAttribute="width" secondItem="bfu-mM-Gvn" secondAttribute="height" multiplier="2:3" id="Yat-sm-vKo"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Рейтинг этого фильма меньше,чем 5?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qHY-NE-bmW" userLabel="Question Label">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Рейтинг этого фильма меньше чем 5?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qHY-NE-bmW" userLabel="Question Label">
                                         <rect key="frame" x="0.0" y="625" width="374" height="99"/>
                                         <fontDescription key="fontDescription" name="TimesNewRomanPS-BoldMT" family="Times New Roman" pointSize="23"/>
                                         <color key="textColor" name="YP White"/>
@@ -103,10 +103,10 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="buttonNo" destination="vxd-Ci-m3h" id="kX6-vQ-jWZ"/>
+                        <outlet property="buttonNo" destination="vxd-Ci-m3h" id="Opa-E8-Wvm"/>
                         <outlet property="buttonYes" destination="MKf-v3-4rH" id="qrg-ft-lgU"/>
+                        <outlet property="imageView" destination="bfu-mM-Gvn" id="6m4-qu-pTL"/>
                         <outlet property="indexLabel" destination="i9L-Yo-KtL" id="gni-1j-7LX"/>
-                        <outlet property="questionLabel" destination="Gfp-YJ-etJ" id="DYp-5A-sA8"/>
                         <outlet property="questions" destination="qHY-NE-bmW" id="2If-ob-KE0"/>
                     </connections>
                 </viewController>

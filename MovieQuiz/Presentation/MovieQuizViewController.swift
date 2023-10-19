@@ -4,25 +4,106 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        questionLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        // шрифты для ViewModel
         buttonNo.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         buttonYes.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         indexLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         questions.font = UIFont(name: "YSDisplay-Bold", size: 23)
-        
     }
+    // Outlet для ViewModel
+    @IBOutlet private weak var buttonNo: UIButton!
+    @IBOutlet private weak var buttonYes: UIButton!
+    @IBOutlet private weak var indexLabel: UILabel!
+    @IBOutlet private weak var questions: UILabel!
+    @IBOutlet weak var imageView: UIImageView!
     
-    @IBOutlet weak var questionLabel: UILabel!
+    // переменная с индексом текущего вопроса,начальное 0 так-как индекс массива начинается с 0
+    private var currentQuestionIndex = 0
+    // переменная с счётчиком правильных ответов
+    private var correctAnswers = 0
     
-    @IBOutlet weak var buttonNo: UIButton!
-    
-    @IBOutlet weak var buttonYes: UIButton!
-    
-    @IBOutlet weak var indexLabel: UILabel!
-    
-    @IBOutlet weak var questions: UILabel!
-    
+    private func convert(model: QuizQuestion) -> QuizStepViewModel {
+        let questionStep = QuizStepViewModel(
+            image: UIImage(named: model.image) ?? UIImage(),
+            question: model.text,
+            questionNumber: "\(currentQuestionIndex + 1) / \(questions.count)")
+        return questionStep
+    }
 }
+
+// вью модель для состояния "Вопрос показан"
+struct QuizStepViewModel {
+  // картинка с афишей фильма с типом UIImage
+  let image: UIImage
+  // вопрос о рейтинге квиза
+  let question: String
+  // строка с порядковым номером этого вопроса (ex. "1/10")
+  let questionNumber: String
+}
+
+// для состояния "Результат квиза"
+struct QuizResultViewModel {
+    let title: String
+    let text: String
+    let buttonText: String
+}
+
+// cостояние "Результата ответа"
+var responseResult: Bool = true
+
+struct QuizQuestion {
+    //cтрока с названием фильма,совпадает с названием картинки афиши в Assets
+    let image: String
+    // строка с вопросом о рейтинге фильма
+    let text: String
+    // булевое значение, правильный ответ на вопрос
+    let correctAnswer: Bool
+}
+
+private let questions: [QuizQuestion] = [
+QuizQuestion(image: "The Godfather", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+QuizQuestion(image: "The Dark Knight", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+QuizQuestion(image: "Kill Bill", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+QuizQuestion(image: "The Avengers", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+QuizQuestion(image: "Deadpool", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+QuizQuestion(image: "The Green Knight", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+QuizQuestion(image: "Old", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
+QuizQuestion(image: "The Ice Age Adventures of Buck Wild", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
+QuizQuestion(image: "Tesla", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
+QuizQuestion(image: "Vivarium", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false)
+]
+
+private var currentQuestionIndex = 0
+
+private func convert(model: QuizQuestion) -> QuizStepViewModel {
+    let questionStep = QuizStepViewModel(
+        image: UIImage(named: model.image) ?? UIImage(),
+        question: model.text,
+        questionNumber: "\(currentQuestionIndex + 1) / \(questions.count)")
+    return questionStep
+}
+
+
+private func show(quiz step: QuizStepViewModel) {
+ 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
  Mock-данные
