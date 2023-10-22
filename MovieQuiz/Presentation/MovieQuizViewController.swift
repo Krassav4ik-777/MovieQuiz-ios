@@ -8,20 +8,48 @@ final class MovieQuizViewController: UIViewController {
         buttonNo.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         buttonYes.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         indexLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        questions.font = UIFont(name: "YSDisplay-Bold", size: 23)
+        textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
+        guard let firstQuestionModel = questions.first else {
+            print("Нe удалось извлечь из массива первый вопрос")
+            return
+        }
+        let firstQuestionViewModel = convert(model: firstQuestionModel)
+        self.show(quiz: firstQuestionViewModel)
     }
     // Outlet для ViewModel
     @IBOutlet private weak var buttonNo: UIButton!
     @IBOutlet private weak var buttonYes: UIButton!
     @IBOutlet private weak var indexLabel: UILabel!
-    @IBOutlet private weak var questions: UILabel!
+    @IBOutlet weak var textLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     
+    @IBAction func noButtonClicked(_ sender: UIButton) {
+        let currentQuestion = questions [currentQuestionIndex]
+        let givenAnswer = false
+        
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
+    
+    @IBAction func yesButtonClicked(_ sender: UIButton) {
+        let currentQuestion = questions [currentQuestionIndex]
+        let givenAnswer = true
+        
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
+    
+    
+    private func showAnswerResult(isCorrect: Bool) {
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 8
+        imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
+    }
     // переменная с индексом текущего вопроса,начальное 0 так-как индекс массива начинается с 0
     private var currentQuestionIndex = 0
-    // переменная с счётчиком правильных ответов
+//     переменная с счётчиком правильных ответов
     private var correctAnswers = 0
-    
+    // берём текущий вопрос из массива вопросов по индексу текущего вопроса
+//    let currentQuestion = questions[currentQuestionIndex]
+    // метод конвертации который принимает моковый вопрос и возвращает вью модель для экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
             image: UIImage(named: model.image) ?? UIImage(),
@@ -29,7 +57,15 @@ final class MovieQuizViewController: UIViewController {
             questionNumber: "\(currentQuestionIndex + 1) / \(questions.count)")
         return questionStep
     }
+    // приватный метод вывода на экран вопроса, который принимает на вход вью модель вопроса и ничего не возвращает
+    private func show(quiz step: QuizStepViewModel) {
+      imageView.image = step.image
+      textLabel.text = step.question
+      indexLabel.text = step.questionNumber
+    }
 }
+
+
 
 // вью модель для состояния "Вопрос показан"
 struct QuizStepViewModel {
@@ -73,20 +109,13 @@ QuizQuestion(image: "Tesla", text: "Рейтинг этого фильма бо�
 QuizQuestion(image: "Vivarium", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false)
 ]
 
-private var currentQuestionIndex = 0
-
-private func convert(model: QuizQuestion) -> QuizStepViewModel {
-    let questionStep = QuizStepViewModel(
-        image: UIImage(named: model.image) ?? UIImage(),
-        question: model.text,
-        questionNumber: "\(currentQuestionIndex + 1) / \(questions.count)")
-    return questionStep
-}
-
-
-private func show(quiz step: QuizStepViewModel) {
- 
-}
+//// переменная с индексом текущего вопроса,начальное 0 так-как индекс массива начинается с 0
+//private var currentQuestionIndex = 0
+//// переменная с счётчиком правильных ответов
+//private var correctAnswers = 0
+//
+//// берём текущий вопрос из массива вопросов по индексу текущего вопроса
+//let currentQuestion = questions[currentQuestionIndex]
 
 
 
