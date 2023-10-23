@@ -113,6 +113,7 @@
                         <outlet property="buttonYes" destination="MKf-v3-4rH" id="qrg-ft-lgU"/>
                         <outlet property="imageView" destination="bfu-mM-Gvn" id="6m4-qu-pTL"/>
                         <outlet property="indexLabel" destination="i9L-Yo-KtL" id="gni-1j-7LX"/>
+                        <outlet property="questionTitleLabel" destination="Gfp-YJ-etJ" id="C8m-0a-7oF"/>
                         <outlet property="textLabel" destination="qHY-NE-bmW" id="wkQ-YN-5ei"/>
                     </connections>
                 </viewController>
