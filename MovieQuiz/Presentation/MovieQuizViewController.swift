@@ -10,6 +10,7 @@ final class MovieQuizViewController: UIViewController {
         indexLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         questionTitleLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        imageView.layer.cornerRadius = 20
         // вызов первого вопроса
         guard let firstQuestionModel = questions.first else {
             print("Нe удалось извлечь из массива первый вопрос")
@@ -18,6 +19,8 @@ final class MovieQuizViewController: UIViewController {
         let firstQuestionViewModel = convert(model: firstQuestionModel)
         self.show(quiz: firstQuestionViewModel)
     }
+    
+    
     // Outlet для ViewModel
     @IBOutlet private weak var buttonNo: UIButton!
     @IBOutlet private weak var buttonYes: UIButton!
@@ -25,20 +28,29 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var questionTitleLabel: UILabel!
-    // метод вызывается при нажатии кнопки Нет
-    @IBAction private func noButtonClicked(_ sender: UIButton) {
-        let currentQuestion = questions [currentQuestionIndex]
-        let givenAnswer = false
-        
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-    }
-    // метод вызывается при нажатии кнопки Да
-    @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        let currentQuestion = questions [currentQuestionIndex]
-        let givenAnswer = true
-        
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-    }
+    
+    // массив моковых вопросов
+    private let questions: [QuizQuestion] = [
+    QuizQuestion(image: "The Godfather", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+    QuizQuestion(image: "The Dark Knight", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+    QuizQuestion(image: "Kill Bill", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+    QuizQuestion(image: "The Avengers", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+    QuizQuestion(image: "Deadpool", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+    QuizQuestion(image: "The Green Knight", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
+    QuizQuestion(image: "Old", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
+    QuizQuestion(image: "The Ice Age Adventures of Buck Wild", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
+    QuizQuestion(image: "Tesla", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
+    QuizQuestion(image: "Vivarium", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false)
+    ]
+    
+    // переменная с индексом текущего вопроса,начальное 0 так-как индекс массива начинается с 0
+    private var currentQuestionIndex = 0
+    
+    //     переменная с счётчиком правильных ответов
+    private var correctAnswers = 0
+    
+    // cостояние "Результата ответа"
+    private var responseResult: Bool = true
     
     // приватный метод который меняет цвет рамки и вызывает метод перехода,и обрабатывает результат ответа
     private func showAnswerResult(isCorrect: Bool) {
@@ -54,11 +66,7 @@ final class MovieQuizViewController: UIViewController {
             self.showNextQuestionResults()
         }
     }
-    // переменная с индексом текущего вопроса,начальное 0 так-как индекс массива начинается с 0
-    private var currentQuestionIndex = 0
-    //     переменная с счётчиком правильных ответов
-    private var correctAnswers = 0
-   
+    
     // метод конвертации который принимает моковый вопрос и возвращает вью модель для главного экрана
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
@@ -67,12 +75,14 @@ final class MovieQuizViewController: UIViewController {
             questionNumber: "\(currentQuestionIndex + 1) / \(questions.count)")
         return questionStep
     }
+    
     // приватный метод вывода на экран вопроса, который принимает на вход вью модель вопроса и ничего не возвращает
     private func show(quiz step: QuizStepViewModel) {
         imageView.image = step.image
         textLabel.text = step.question
         indexLabel.text = step.questionNumber
     }
+    
     // приватный метод который содержит логику перехода в один из сценариев
     private func showNextQuestionResults() {
         imageView.layer.borderWidth = 0
@@ -90,6 +100,7 @@ final class MovieQuizViewController: UIViewController {
             show(quiz: viewModel) // идём в состояние "Вопрос показан"
         }
     }
+    
     // приватный метод для показа результатов раунда квиза
     private func show(quiz result: QuizResultViewModel) {
         // создаём объект всплывающего окна
@@ -132,9 +143,6 @@ struct QuizResultViewModel {
     let buttonText: String
 }
 
-// cостояние "Результата ответа"
-private var responseResult: Bool = true
-
 struct QuizQuestion {
     //cтрока с названием фильма,совпадает с названием картинки афиши в Assets
     let image: String
@@ -143,40 +151,23 @@ struct QuizQuestion {
     // булевое значение, правильный ответ на вопрос
     let correctAnswer: Bool
 }
-// массив моковых вопросов
-private let questions: [QuizQuestion] = [
-QuizQuestion(image: "The Godfather", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-QuizQuestion(image: "The Dark Knight", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-QuizQuestion(image: "Kill Bill", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-QuizQuestion(image: "The Avengers", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-QuizQuestion(image: "Deadpool", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-QuizQuestion(image: "The Green Knight", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-QuizQuestion(image: "Old", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
-QuizQuestion(image: "The Ice Age Adventures of Buck Wild", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
-QuizQuestion(image: "Tesla", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
-QuizQuestion(image: "Vivarium", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false)
-]
 
+    // метод вызывается при нажатии кнопки Нет
+    @IBAction private func noButtonClicked(_ sender: UIButton) {
+        let currentQuestion = questions [currentQuestionIndex]
+        let givenAnswer = false
+        
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
+    // метод вызывается при нажатии кнопки Да
+    @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        let currentQuestion = questions [currentQuestionIndex]
+        let givenAnswer = true
+        
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
+    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
  Mock-данные
