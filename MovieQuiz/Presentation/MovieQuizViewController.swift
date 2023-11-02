@@ -68,6 +68,8 @@ final class MovieQuizViewController: UIViewController {
         }
     }
     
+    
+    
     // метод конвертации который принимает моковый вопрос и возвращает вью модель для главного экрана
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
