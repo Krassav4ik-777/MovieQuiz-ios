@@ -113,7 +113,9 @@ final class MovieQuizViewController: UIViewController {
             preferredStyle: .alert)
     // создаём для алерта кнопку с действием
         // в замыкании пишем,что должно происходить при нажатии кнопки
-    let action = UIAlertAction(title: result.buttonText, style: .default) { _ in
+    let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
+        guard let self = self else { return }
+        
         self.currentQuestionIndex = 0
         // сбрасываем переменную с количеством правильных ответов
         self.correctAnswers = 0
