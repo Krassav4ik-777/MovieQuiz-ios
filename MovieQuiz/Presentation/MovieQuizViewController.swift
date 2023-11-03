@@ -20,7 +20,6 @@ final class MovieQuizViewController: UIViewController {
         self.show(quiz: firstQuestionViewModel)
     }
     
-    
     // Outlet для ViewModel
     @IBOutlet private weak var buttonNo: UIButton!
     @IBOutlet private weak var buttonYes: UIButton!
@@ -29,24 +28,19 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var questionTitleLabel: UILabel!
     
-    // массив моковых вопросов
-    private let questions: [QuizQuestion] = [
-    QuizQuestion(image: "The Godfather", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-    QuizQuestion(image: "The Dark Knight", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-    QuizQuestion(image: "Kill Bill", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-    QuizQuestion(image: "The Avengers", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-    QuizQuestion(image: "Deadpool", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-    QuizQuestion(image: "The Green Knight", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
-    QuizQuestion(image: "Old", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
-    QuizQuestion(image: "The Ice Age Adventures of Buck Wild", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
-    QuizQuestion(image: "Tesla", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false),
-    QuizQuestion(image: "Vivarium", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: false)
-    ]
+    // Общее количество вопросов для квиза
+    private let questionsAmount: Int = 10
+    
+    // Фабрика вопросов.Контроллер будет обращаться за вопросами к ней.
+    private var questionFactory: QuestionFactory = QuestionFactory()
+    
+    // вопрос,который видит пользователь
+    private var currentQuestion: QuizQuestion?
     
     // переменная с индексом текущего вопроса,начальное 0 так-как индекс массива начинается с 0
     private var currentQuestionIndex = 0
     
-    //     переменная с счётчиком правильных ответов
+    //  переменная с счётчиком правильных ответов
     private var correctAnswers = 0
     
     // cостояние "Результата ответа"
@@ -67,8 +61,6 @@ final class MovieQuizViewController: UIViewController {
             self.showNextQuestionResults()
         }
     }
-    
-    
     
     // метод конвертации который принимает моковый вопрос и возвращает вью модель для главного экрана
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -130,32 +122,6 @@ final class MovieQuizViewController: UIViewController {
     // показываем всплывающее окно
     self.present(alert, animated: true, completion: nil)
 }
-    
-// вью модель для состояния "Вопрос показан"
-struct QuizStepViewModel {
-  // картинка с афишей фильма с типом UIImage
-  let image: UIImage
-  // вопрос о рейтинге квиза
-  let question: String
-  // строка с порядковым номером этого вопроса (ex. "1/10")
-  let questionNumber: String
-}
-
-// для состояния "Результат квиза"
-struct QuizResultViewModel {
-    let title: String
-    let text: String
-    let buttonText: String
-}
-
-struct QuizQuestion {
-    //cтрока с названием фильма,совпадает с названием картинки афиши в Assets
-    let image: String
-    // строка с вопросом о рейтинге фильма
-    let text: String
-    // булевое значение, правильный ответ на вопрос
-    let correctAnswer: Bool
-}
 
     // метод вызывается при нажатии кнопки Нет
     @IBAction private func noButtonClicked(_ sender: UIButton) {
@@ -173,6 +139,11 @@ struct QuizQuestion {
     }
     
 }
+
+
+
+
+
 
 /*
  Mock-данные
