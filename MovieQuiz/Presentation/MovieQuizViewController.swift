@@ -12,12 +12,11 @@ final class MovieQuizViewController: UIViewController {
         questionTitleLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         imageView.layer.cornerRadius = 20
         // вызов первого вопроса
-        guard let firstQuestionModel = questions.first else {
-            print("Нe удалось извлечь из массива первый вопрос")
-            return
+        if let firstQuestion = questionFactory.requestNextQuestion() {
+            currentQuestion = firstQuestion
+            let viewModel = convert(model: firstQuestion)
+            show(quiz: viewModel)
         }
-        let firstQuestionViewModel = convert(model: firstQuestionModel)
-        self.show(quiz: firstQuestionViewModel)
     }
     
     // Outlet для ViewModel
@@ -32,7 +31,7 @@ final class MovieQuizViewController: UIViewController {
     private let questionsAmount: Int = 10
     
     // Фабрика вопросов.Контроллер будет обращаться за вопросами к ней.
-    private var questionFactory: QuestionFactory = QuestionFactory()
+    private var questionFactory: QuestionFactoryProtocol = QuestionFactory()
     
     // вопрос,который видит пользователь
     private var currentQuestion: QuizQuestion?
@@ -67,7 +66,7 @@ final class MovieQuizViewController: UIViewController {
         let questionStep = QuizStepViewModel(
             image: UIImage(named: model.image) ?? UIImage(),
             question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1) / \(questions.count)")
+            questionNumber: "\(currentQuestionIndex + 1) / \(questionsAmount)")
         return questionStep
     }
     
@@ -81,21 +80,24 @@ final class MovieQuizViewController: UIViewController {
     // приватный метод который содержит логику перехода в один из сценариев
     private func showNextQuestionResults() {
         imageView.layer.borderWidth = 0
-        if currentQuestionIndex == questions.count - 1 {
-            let text = "Ваш результат: \(correctAnswers)/10"
+        if currentQuestionIndex == questionsAmount - 1 {
+            let text = correctAnswers == questionsAmount ?
+            "Поздравляем, вы ответили на 10 из 10!" :
+            "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
             let viewModel = QuizResultViewModel(title: "Этот раунд окончен!",
                                                 text: text,
                                                 buttonText: "Сыграть ещё раз")
             show(quiz: viewModel) // идём в состояние "Результат квиза"
         } else {
             currentQuestionIndex += 1
-            let nextQuestion = questions[currentQuestionIndex]
-            let viewModel = convert(model: nextQuestion)
-            
-            show(quiz: viewModel) // идём в состояние "Вопрос показан"
+            if let nextQuestion = questionFactory.requestNextQuestion() {
+                currentQuestion = nextQuestion
+                let viewModel = convert(model: nextQuestion)
+                
+                show(quiz: viewModel) // идём в состояние "Вопрос показан"
+            }
         }
     }
-    
     // приватный метод для показа результатов раунда квиза
     private func show(quiz result: QuizResultViewModel) {
         // создаём объект всплывающего окна
@@ -113,9 +115,12 @@ final class MovieQuizViewController: UIViewController {
         self.correctAnswers = 0
         
         // заново показываем первый вопрос
-        let firstQuestion = self.questions[self.currentQuestionIndex]
-        let viewModel = self.convert(model: firstQuestion)
-        self.show(quiz: viewModel)
+        if let firstQuestion = self.questionFactory.requestNextQuestion() {
+            self.currentQuestion = firstQuestion
+            let viewModel = self.convert(model: firstQuestion)
+
+            self.show(quiz: viewModel)
+        }
     }
     //добавляем в алерт кнопку
     alert.addAction(action)
@@ -125,14 +130,21 @@ final class MovieQuizViewController: UIViewController {
 
     // метод вызывается при нажатии кнопки Нет
     @IBAction private func noButtonClicked(_ sender: UIButton) {
-        let currentQuestion = questions [currentQuestionIndex]
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        
         let givenAnswer = false
         
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
+    
     // метод вызывается при нажатии кнопки Да
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        let currentQuestion = questions [currentQuestionIndex]
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        
         let givenAnswer = true
         
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
