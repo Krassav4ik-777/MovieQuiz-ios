@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController {
+final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -11,14 +11,25 @@ final class MovieQuizViewController: UIViewController {
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         questionTitleLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         imageView.layer.cornerRadius = 20
+        questionFactory?.delegate = self
         // вызов первого вопроса
-        if let firstQuestion = questionFactory.requestNextQuestion() {
-            currentQuestion = firstQuestion
-            let viewModel = convert(model: firstQuestion)
-            show(quiz: viewModel)
-        }
+        questionFactory?.requestNextQuestion()
     }
     
+    // MARK: - QuestionFactoryDelegate
+    
+    func didReceiveNextQuestion(question: QuizQuestion?) {
+        // проверка, что вопрос не nil
+        guard let question = question else {
+            return
+        }
+        
+        currentQuestion = question
+        let viewModel = convert(model: question)
+        DispatchQueue.main.async { [weak self] in
+            self?.show(quiz: viewModel)
+        }
+    }
     // Outlet для ViewModel
     @IBOutlet private weak var buttonNo: UIButton!
     @IBOutlet private weak var buttonYes: UIButton!
@@ -31,7 +42,7 @@ final class MovieQuizViewController: UIViewController {
     private let questionsAmount: Int = 10
     
     // Фабрика вопросов.Контроллер будет обращаться за вопросами к ней.
-    private var questionFactory: QuestionFactoryProtocol = QuestionFactory()
+private var questionFactory: QuestionFactoryProtocol? = QuestionFactory()
     
     // вопрос,который видит пользователь
     private var currentQuestion: QuizQuestion?
@@ -90,12 +101,7 @@ final class MovieQuizViewController: UIViewController {
             show(quiz: viewModel) // идём в состояние "Результат квиза"
         } else {
             currentQuestionIndex += 1
-            if let nextQuestion = questionFactory.requestNextQuestion() {
-                currentQuestion = nextQuestion
-                let viewModel = convert(model: nextQuestion)
-                
-                show(quiz: viewModel) // идём в состояние "Вопрос показан"
-            }
+            self.questionFactory?.requestNextQuestion()
         }
     }
     // приватный метод для показа результатов раунда квиза
@@ -115,12 +121,7 @@ final class MovieQuizViewController: UIViewController {
         self.correctAnswers = 0
         
         // заново показываем первый вопрос
-        if let firstQuestion = self.questionFactory.requestNextQuestion() {
-            self.currentQuestion = firstQuestion
-            let viewModel = self.convert(model: firstQuestion)
-
-            self.show(quiz: viewModel)
-        }
+        questionFactory?.requestNextQuestion()
     }
     //добавляем в алерт кнопку
     alert.addAction(action)
