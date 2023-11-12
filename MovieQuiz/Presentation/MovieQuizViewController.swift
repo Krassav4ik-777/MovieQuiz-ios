@@ -14,8 +14,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory?.delegate = self
         // вызов первого вопроса
         questionFactory?.requestNextQuestion()
+        alertPresenter = AlertPresenterImpl(viewController: self)
+//TODO   statisticService = StatisticServiceIml
+// Файлы которые лежат в приложении print(NSHomeDirectory())
+// Содержание исполняемых файлов  print(Bundle.main.bundlePath)
+        
     }
-    
     // MARK: - QuestionFactoryDelegate
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
@@ -30,6 +34,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self?.show(quiz: viewModel)
         }
     }
+    
     // Outlet для ViewModel
     @IBOutlet private weak var buttonNo: UIButton!
     @IBOutlet private weak var buttonYes: UIButton!
@@ -42,7 +47,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private let questionsAmount: Int = 10
     
     // Фабрика вопросов.Контроллер будет обращаться за вопросами к ней.
-private var questionFactory: QuestionFactoryProtocol? = QuestionFactory()
+    private var questionFactory: QuestionFactoryProtocol? = QuestionFactory()
+    
+    private var alertPresenter: AlertPresenter?
+    
+//TODO    private var statisticService: StatisticService?
     
     // вопрос,который видит пользователь
     private var currentQuestion: QuizQuestion?
@@ -106,27 +115,21 @@ private var questionFactory: QuestionFactoryProtocol? = QuestionFactory()
     }
     // приватный метод для показа результатов раунда квиза
     private func show(quiz result: QuizResultViewModel) {
-        // создаём объект всплывающего окна
-        let alert = UIAlertController(
-            title: result.title,
-            message: result.text,
-            preferredStyle: .alert)
-    // создаём для алерта кнопку с действием
-        // в замыкании пишем,что должно происходить при нажатии кнопки
-    let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
-        guard let self = self else { return }
+// TODO        statisticService?.store
+        let alertModel = AlertModel(
+            title: "Игра окончена",
+            message: "Вы ответили на \(correctAnswers) из 10",
+            buttonText: "Cыграть ещё раз!",
+            buttonAction: { [ weak self ] in
+                self?.currentQuestionIndex = 0
+                // сбрасываем переменную с количеством правильных ответов
+                self?.correctAnswers = 0
+                // заново показываем первый вопрос
+                self?.questionFactory?.requestNextQuestion()
+            }
+        )
         
-        self.currentQuestionIndex = 0
-        // сбрасываем переменную с количеством правильных ответов
-        self.correctAnswers = 0
-        
-        // заново показываем первый вопрос
-        questionFactory?.requestNextQuestion()
-    }
-    //добавляем в алерт кнопку
-    alert.addAction(action)
-    // показываем всплывающее окно
-    self.present(alert, animated: true, completion: nil)
+        alertPresenter?.show(alertModel: alertModel)
 }
 
     // метод вызывается при нажатии кнопки Нет
