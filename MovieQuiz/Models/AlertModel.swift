@@ -1,9 +1,3 @@
-//
-//  AlertModel.swift
-//  MovieQuiz
-//
-//  Created by KraSSavchiK on 07.11.2023.
-//
 
 import Foundation
 

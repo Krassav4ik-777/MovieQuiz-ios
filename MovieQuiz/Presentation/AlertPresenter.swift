@@ -1,9 +1,3 @@
-//
-//  AlertPresenter.swift
-//  MovieQuiz
-//
-//  Created by KraSSavchiK on 07.11.2023.
-//
 
 import Foundation
 import UIKit
@@ -11,7 +5,6 @@ import UIKit
 protocol AlertPresenter {
     func show(alertModel: AlertModel)
 }
-
 
 final class AlertPresenterImpl {
    private weak var viewController: UIViewController?
@@ -21,6 +14,7 @@ final class AlertPresenterImpl {
     }
 }
 
+     // MARK: - AlertPresenter
 extension AlertPresenterImpl: AlertPresenter {
     func show(alertModel: AlertModel) {
         // создаём объект всплывающего окна
