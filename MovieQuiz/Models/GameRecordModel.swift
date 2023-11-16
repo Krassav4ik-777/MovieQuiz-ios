@@ -21,9 +21,3 @@ extension GameRecord: Comparable {
         lhs.accuracy < rhs.accuracy
     }
 }
-
-
-   
-
-
-
