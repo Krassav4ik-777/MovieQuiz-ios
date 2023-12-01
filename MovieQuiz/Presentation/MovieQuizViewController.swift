@@ -103,7 +103,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private func showFinalResults() {
         statisticService?.store(correct: correctAnswers, total: questionsCount)
-        
+       
         let alertModel = AlertModel(
             title: "Игра окончена",
             message: makeResultMessage() ,
