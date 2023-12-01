@@ -20,13 +20,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
      // MARK: - QuestionFactoryDelegate
     func didReceiveNextQuestion(question: QuizQuestion?) {
+        
         // проверка, что вопрос не nil
         guard let question = question else {
             return
         }
         
         currentQuestion = question
-        let viewModel = convert(model: question)
+        let viewModel = presenter.convert(model: question)
         DispatchQueue.main.async { [weak self] in
             self?.show(quiz: viewModel)
         }
@@ -42,20 +43,18 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - Private variables
-    // Общее количество вопросов для квиза
-    private let questionsCount: Int = 10
-    // Фабрика вопросов.Контроллер будет обращаться за вопросами к ней.(???)
+    // Фабрика вопросов.Контроллер будет обращаться за вопросами к ней
     private var questionFactory: QuestionFactoryProtocol?
     private var alertPresenter: AlertPresenter?
     private var statisticService: StatisticService?
     // вопрос,который видит пользователь
     private var currentQuestion: QuizQuestion?
-    // переменная с индексом текущего вопроса,начальное 0 так-как индекс массива начинается с 0
-    private var currentQuestionIndex: Int = 0
     //  переменная с счётчиком правильных ответов
     private var correctAnswers: Int = 0
     // cостояние "Результата ответа"
     private var responseResult: Bool = true
+    
+    private let presenter = MovieQuizPresenter()
     
     // MARK: - Private Methods
     // приватный метод который меняет цвет рамки и вызывает метод перехода,и обрабатывает результат ответа
@@ -73,15 +72,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self.showNextQuestionResults()
         }
     }
-    
-    // метод конвертации который принимает моковый вопрос и возвращает вью модель для главного экрана
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        return QuizStepViewModel(
-            image: UIImage(data: model.image) ?? UIImage(),
-            question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1)/\(questionsCount)")
-    }
-    
+        
     // приватный метод вывода на экран вопроса, который принимает на вход вью модель вопроса и ничего не возвращает
     private func show(quiz step: QuizStepViewModel) {
         imageView.image = step.image
@@ -93,23 +84,23 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func showNextQuestionResults() {
         
         imageView.layer.borderWidth = 0
-        if currentQuestionIndex == questionsCount - 1 {
+        if presenter.isLastQuestion() {
             showFinalResults()
         } else {
-            currentQuestionIndex += 1
+            presenter.switchToNextQuestion()
             self.questionFactory?.requestNextQuestion()
         }
     }
     
     private func showFinalResults() {
-        statisticService?.store(correct: correctAnswers, total: questionsCount)
+        statisticService?.store(correct: correctAnswers, total: presenter.questionsCount)
        
         let alertModel = AlertModel(
             title: "Игра окончена",
             message: makeResultMessage() ,
             buttonText: "Cыграть ещё раз!",
             buttonAction: { [ weak self ] in
-                self?.currentQuestionIndex = 0
+                self?.presenter.resetQuestionIndex()
                 // сбрасываем переменную с количеством правильных ответов
                 self?.correctAnswers = 0
                 // заново показываем первый вопрос
@@ -128,7 +119,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         let accuracy = String(format: "%.2f", statisticService.totalAccuracy)
         let totalPlaysCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
-        let currentGameResultLine = "Ваш результат: \(correctAnswers)\\\(questionsCount)"
+        let currentGameResultLine = "Ваш результат: \(correctAnswers)\\\(presenter.questionsCount)"
         let bestGameInfoLine = "Рекорд: \(bestGame.correct)\\\(bestGame.total)"
         + " (\(bestGame.date.dateTimeString)) "
         let averageAccuracyLine = " Средняя точность: \(accuracy)%"
@@ -161,7 +152,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                                buttonText: "Попробовать еще раз") { [weak self] in
             guard let self = self else { return }
             
-            self.currentQuestionIndex = 0
+            self.presenter.resetQuestionIndex()
             self.correctAnswers = 0
             
             showLoadingIndicator()
@@ -204,5 +195,3 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
 }
-
-
