@@ -5,14 +5,12 @@ final class QuestionFactory: QuestionFactoryProtocol {
     private let moviesLoader: MoviesLoading
     weak var delegate: QuestionFactoryDelegate?
     
-    
-    
     init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate?) {
         self.moviesLoader = moviesLoader
         self.delegate = delegate
     }
     
-    // MARK: - Private variables
+    // MARK: - Private Properties
     //    // массив моковых вопросов
     //    private let questions: [QuizQuestion] = [
     //        QuizQuestion(image: "The Godfather", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),

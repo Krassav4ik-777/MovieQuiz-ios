@@ -5,7 +5,6 @@ protocol StatisticService {
     var totalAccuracy: Double { get }
     var gamesCount: Int { get }
     var bestGame: GameRecord? { get }
-    
     func store(correct: Int, total: Int)
 }
 
@@ -15,15 +14,13 @@ final class StatisticServiceImpl {
         case correct, total, bestGame, gamesCount
     }
     
-    // MARK: - Private properties
+    // MARK: - Private Properties
     private let userDefaults: UserDefaults
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
     private let dateProvider: () -> Date
     
-    // MARK: - Initializers
-    init(
-        userDefaults: UserDefaults = .standard,
+    init(userDefaults: UserDefaults = .standard,
         decoder: JSONDecoder = JSONDecoder(),
         encoder: JSONEncoder = JSONEncoder(),
         dateProvider: @escaping () -> Date = { Date() }
@@ -101,12 +98,3 @@ extension StatisticServiceImpl: StatisticService {
         }
     }
 }
-
-
-
-
-
-
-
-
-
