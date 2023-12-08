@@ -145,5 +145,4 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
 
             return resultMessage
         }
-    
     }

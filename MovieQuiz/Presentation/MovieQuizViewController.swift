@@ -3,7 +3,7 @@ import UIKit
 final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
     
     // MARK: - IB Outlets
-    @IBOutlet private weak var buttonNo: UIButton!
+    @IBOutlet weak var buttonNo: UIButton!
     @IBOutlet private weak var buttonYes: UIButton!
     @IBOutlet private weak var indexLabel: UILabel!
     @IBOutlet private weak var textLabel: UILabel!
@@ -32,6 +32,8 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         textLabel.text = step.question
         indexLabel.text = step.questionNumber
         imageView.layer.borderColor = UIColor.clear.cgColor
+        buttonNo.isEnabled = true
+        buttonYes.isEnabled = true
     }
             
     func show(quiz result: QuizResultViewModel) {
@@ -91,9 +93,13 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         // MARK: - IBActions
         @IBAction private func noButtonClicked(_ sender: UIButton) {
             presenter.noButtonClicked()
+            buttonNo.isEnabled = false
+            buttonYes.isEnabled = false
         }
         
         @IBAction private func yesButtonClicked(_ sender: UIButton) {
             presenter.yesButtonClicked()
+            buttonYes.isEnabled = false
+            buttonNo.isEnabled = false
         }
     }
