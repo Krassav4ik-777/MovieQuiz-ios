@@ -31,6 +31,7 @@
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="1/10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="i9L-Yo-KtL" userLabel="Index Label">
                                                 <rect key="frame" x="337.5" y="0.0" width="36.5" height="24"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="Index"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
                                                 <color key="textColor" name="YP White"/>
                                                 <nil key="highlightedColor"/>
@@ -40,6 +41,7 @@
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bfu-mM-Gvn" userLabel="Preview Image">
                                         <rect key="frame" x="0.0" y="44" width="374" height="561"/>
                                         <color key="backgroundColor" name="YP White"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="Poster"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="bfu-mM-Gvn" secondAttribute="height" multiplier="2:3" id="Yat-sm-vKo"/>
                                         </constraints>
@@ -56,6 +58,7 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vxd-Ci-m3h" userLabel="Кнопка Нет">
                                                 <rect key="frame" x="0.0" y="0.0" width="177" height="60"/>
                                                 <color key="backgroundColor" name="YP White"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="No"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="60" id="jSJ-Ff-RwS"/>
                                                 </constraints>
@@ -76,6 +79,7 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MKf-v3-4rH" userLabel="Кнопка Да">
                                                 <rect key="frame" x="197" y="0.0" width="177" height="60"/>
                                                 <color key="backgroundColor" name="YP White"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="Yes"/>
                                                 <fontDescription key="fontDescription" name="BradleyHandITCTT-Bold" family="Bradley Hand" pointSize="20"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" title="Да">
@@ -98,17 +102,23 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="SCC-Sv-Ole">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
                             <constraint firstItem="aXU-Fe-PUb" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="LtO-zP-U05"/>
+                            <constraint firstItem="SCC-Sv-Ole" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="Ya0-hc-5L0"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="aXU-Fe-PUb" secondAttribute="trailing" constant="20" id="eA8-TF-gY3"/>
+                            <constraint firstItem="SCC-Sv-Ole" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="uL4-BE-tYI"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="aXU-Fe-PUb" secondAttribute="bottom" id="v0C-pI-OAB"/>
                             <constraint firstItem="aXU-Fe-PUb" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="ygz-jx-e5V"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="SCC-Sv-Ole" id="1Ig-pW-q7f"/>
                         <outlet property="buttonNo" destination="vxd-Ci-m3h" id="Opa-E8-Wvm"/>
                         <outlet property="buttonYes" destination="MKf-v3-4rH" id="qrg-ft-lgU"/>
                         <outlet property="imageView" destination="bfu-mM-Gvn" id="6m4-qu-pTL"/>
